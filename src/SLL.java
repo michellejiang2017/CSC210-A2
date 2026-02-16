@@ -33,8 +33,7 @@ class SLL<T> implements ListADT<T> {
      * @return value at specified index
      */
     public T get(int index) { 
-        NodeSL<T> node = this.getNode(index); 
-        return node.getData(); 
+        return this.getNode(index).getData(); 
     }
 
     /**
@@ -88,7 +87,17 @@ class SLL<T> implements ListADT<T> {
      * @return Linked List in String type
      */
     public String toString() {
-        return "";
+        String returnString = "["; 
+        if (this.head == null) {
+            returnString += "]"; 
+            return returnString;
+        }
+        NodeSL<T> item;
+        for ( item = this.head; item.getNext() != null; item = item.getNext()) {
+            returnString += item.getData() + ", ";
+        }
+        returnString += item.getData() + "]";
+        return returnString;
     }
     
     /**
@@ -96,7 +105,10 @@ class SLL<T> implements ListADT<T> {
      * @return true if empty, false if has elements
      */
     public boolean isEmpty() { 
-        return true; 
+        if (this.size() == 0) { 
+            return true; 
+        }
+        return false; 
     }
 
     /**
@@ -114,5 +126,9 @@ class SLL<T> implements ListADT<T> {
             currentNode = currentNode.getNext();
         }
         return currentNode;
+    }
+
+    public void addFirst(T value) { 
+        
     }
 }
