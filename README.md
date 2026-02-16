@@ -12,6 +12,9 @@ If anyone was particularly helpful, please give them a shout-out here:
 ## References
 
 Any references or resources used besides JavaDoc and course materials:
+https://www.geeksforgeeks.org/dsa/singly-linked-list-tutorial/
+
+Only really used it to understand the theory behind how to do what I wanted. 
 
 If you used generative AI, how did you use it? What role did it play in your learning?
 
