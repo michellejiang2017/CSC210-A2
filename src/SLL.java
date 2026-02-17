@@ -18,6 +18,24 @@ class SLL<T> implements ListADT<T> {
         this.size = 0;
     }
 
+    /** Copy Constructor */
+    public SLL(SLL<T> other) { 
+        if (other.head == null) {
+            this.head = null;
+            this.size = 0;
+            return; 
+        }
+        this.head = new NodeSL<T>(other.head.getData(), null);
+        NodeSL<T> currentNode = this.head;
+        NodeSL<T> otherNode = other.head.getNext();
+        while (otherNode != null) {
+            currentNode.setNext(new NodeSL<T>(otherNode.getData(), null));
+            currentNode = currentNode.getNext();
+            otherNode = otherNode.getNext();
+        }
+        this.size = other.size;
+    }
+
     /**
      * Queries number of elements in list. If empty, returns zero. 
      * @return size of list. 
@@ -57,15 +75,17 @@ class SLL<T> implements ListADT<T> {
      * @throws IndexOutOfBoundsException if the index is less than 0 or greater than or equal to the size of the list
      */
     public void add(int index, T value) { 
-        NodeSL<T> prevNode = this.getNode(index-1); 
-        NodeSL<T> nextNode = this.getNode(index+1);
-        if (nextNode == null) {
-            NodeSL<T> newNode = new NodeSL<T>(value, null);
-            prevNode.setNext(newNode);
-        } else {
-            NodeSL<T> newNode = new NodeSL<T>(value, nextNode);
-            prevNode.setNext(newNode);
+        if (index == 0) {
+            this.addFirst(value);
+            return;
         }
+
+        if (index == size) {
+            this.addLast(value);
+            return;
+        }
+        NodeSL<T> prev = getNode(index - 1);
+        prev.setNext(new NodeSL<T>(value, prev.getNext()));
         this.size++;
     }
 
@@ -76,10 +96,18 @@ class SLL<T> implements ListADT<T> {
      * @return the element at the index specified
      */
     public T remove(int index) {
-        NodeSL<T> prevNode = this.getNode(index-1); 
-        NodeSL<T> nextNode = this.getNode(index+1);
-        prevNode.setNext(nextNode);
-        return this.get(index);
+        if (index < 0 || index >= this.size) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (index == 0) {
+            return removeFirst();
+        }
+        NodeSL<T> prev = getNode(index - 1);
+        NodeSL<T> target = prev.getNext();
+        T data = target.getData();
+        prev.setNext(target.getNext());
+        size--;
+        return data;
     }
 
     /**
@@ -128,7 +156,132 @@ class SLL<T> implements ListADT<T> {
         return currentNode;
     }
 
-    public void addFirst(T value) { 
-        
+    /**
+     * Gets the head (first element) of the list.
+     * @return the head node of the list
+     */
+    public NodeSL<T> getHead() {
+        return this.head;
     }
+
+    /**
+     * Gets the tail (last element) of the list.
+     * @return the tail node of the list
+     */
+    public NodeSL<T> getTail() {
+        if (this.head == null) { 
+            return null; 
+        }
+        NodeSL<T> currentNode = this.head;
+        while (currentNode.getNext() != null) {
+            currentNode = currentNode.getNext();
+        }
+        return currentNode;
+    }
+
+    /**
+     * Adds element to the front of the list. Note: If the element type isn't the same as the list type, the code will not compile.
+     * @param value the element to be added to the front of the ListADT object
+     */
+    public void addFirst(T value) {
+        NodeSL<T> newHead = new NodeSL<T>(value, this.head); 
+        this.head = newHead;
+        this.size++;
+    }
+
+    /**
+     * Adds element to the end of the list. Note: If the element type isn't the same as the list type, the code will not compile.
+     * @param value the element to be added to the end of the ListADT object
+     */
+    public void addLast(T value) { 
+        NodeSL<T> newTail = new NodeSL<T>(value, null);
+        if (this.head == null) {
+            this.head = newTail;
+        } else {
+            NodeSL<T> tail = this.getTail();
+            tail.setNext(newTail);
+        }
+        this.size++;
+    }
+
+    /**
+     * Removes the first element from the list and sets the second element as the new head. 
+     * @return the original first element
+     */
+    public T removeFirst() { 
+        if (this.head == null) { 
+            throw new IllegalStateException();
+        }
+        T data = this.head.getData();
+        this.head = this.head.getNext();
+        this.size--;
+        return data;
+    }
+
+    /**
+     * Removes the last element from the list and sets the second last element as the new tail. 
+     * @return the original last element
+     */
+    public T removeLast() { 
+        if (this.head == null) { 
+            throw new IllegalStateException();
+        } else if (this.size == 1) {
+            T data = this.head.getData();
+            this.head = null;
+            this.size--;
+            return data;
+        }
+        NodeSL<T> newTail = this.getNode(this.size-2);
+        T data = newTail.getNext().getData();
+        newTail.setNext(null);
+        this.size--;
+        return data;
+    }
+
+    /**
+     * Adds element after a given index. 
+     * @param node the node after which the new element should be added
+     * @param value the element to be added to the ListADT object
+     */
+    public void addAfter(NodeSL<T> node, T value) { 
+        if (head == null) {
+        head = new NodeSL<>(value, null);
+        size = 1;
+        return; 
+        }
+
+        if (node == null) {
+            addFirst(value);
+            return; 
+        }
+        NodeSL<T> nextNode = node.getNext();
+        NodeSL<T> newNode = new NodeSL<T>(value, nextNode);
+        node.setNext(newNode);
+        this.size++;
+    }
+
+    /**
+     * Removes all elements after a given node. 
+     * @param node the node after which elements should be removed.
+     */
+    public T removeAfter(NodeSL<T> node) { 
+        if (head == null) {
+            throw new IllegalStateException();
+        }
+
+        if (node == null) {
+            return removeFirst();
+        }
+
+        
+        NodeSL<T> target = node.getNext();
+        if (target == null) { 
+            throw new IllegalStateException();
+        }
+        node.setNext(target.getNext());
+        size--;
+        return target.getData();
+    }
+
+
 }
