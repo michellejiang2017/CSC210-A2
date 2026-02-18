@@ -1,4 +1,5 @@
 import org.w3c.dom.Node;
+import java.util.NoSuchElementException;
 
 /**
  * Class to implement a singly linked list
@@ -10,15 +11,26 @@ import org.w3c.dom.Node;
 
 class SLL<T> implements ListADT<T> {
 
+    /**
+     * The head of the list. If the list is empty, head is null.
+     */
     public NodeSL<T> head; 
+    /**
+     * The size of the list. If the list is empty, size is 0.
+     */
     public int size; 
 
+    /**
+     * Constructor to create an empty list. Sets head to null and size to 0.
+     */
     public SLL() {
         this.head = null;
         this.size = 0;
     }
 
-    /** Copy Constructor */
+    /** Copy Constructor 
+     * @param other the SLL to be copied
+    */
     public SLL(SLL<T> other) { 
         if (other.head == null) {
             this.head = null;
@@ -210,7 +222,7 @@ class SLL<T> implements ListADT<T> {
      */
     public T removeFirst() { 
         if (this.head == null) { 
-            throw new IllegalStateException();
+            throw new NoSuchElementException("removeFirst from empty list");
         }
         T data = this.head.getData();
         this.head = this.head.getNext();
@@ -224,7 +236,7 @@ class SLL<T> implements ListADT<T> {
      */
     public T removeLast() { 
         if (this.head == null) { 
-            throw new IllegalStateException();
+            throw new NoSuchElementException("removeLast from empty list");
         } else if (this.size == 1) {
             T data = this.head.getData();
             this.head = null;
@@ -263,10 +275,11 @@ class SLL<T> implements ListADT<T> {
     /**
      * Removes all elements after a given node. 
      * @param node the node after which elements should be removed.
+     * @return the element that was removed
      */
     public T removeAfter(NodeSL<T> node) { 
         if (head == null) {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("removeAfter from empty list");
         }
 
         if (node == null) {
@@ -276,7 +289,7 @@ class SLL<T> implements ListADT<T> {
         
         NodeSL<T> target = node.getNext();
         if (target == null) { 
-            throw new IllegalStateException();
+            throw new NoSuchElementException("no element after given node");
         }
         node.setNext(target.getNext());
         size--;
