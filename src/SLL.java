@@ -1,5 +1,4 @@
 import org.w3c.dom.Node;
-import java.util.NoSuchElementException;
 
 /**
  * Class to implement a singly linked list
@@ -222,7 +221,7 @@ class SLL<T> implements ListADT<T> {
      */
     public T removeFirst() { 
         if (this.head == null) { 
-            throw new NoSuchElementException("removeFirst from empty list");
+            throw new IllegalStateException();
         }
         T data = this.head.getData();
         this.head = this.head.getNext();
@@ -236,7 +235,7 @@ class SLL<T> implements ListADT<T> {
      */
     public T removeLast() { 
         if (this.head == null) { 
-            throw new NoSuchElementException("removeLast from empty list");
+            throw new IllegalStateException();
         } else if (this.size == 1) {
             T data = this.head.getData();
             this.head = null;
@@ -279,7 +278,7 @@ class SLL<T> implements ListADT<T> {
      */
     public T removeAfter(NodeSL<T> node) { 
         if (head == null) {
-            throw new NoSuchElementException("removeAfter from empty list");
+            throw new IllegalStateException();
         }
 
         if (node == null) {
@@ -289,7 +288,7 @@ class SLL<T> implements ListADT<T> {
         
         NodeSL<T> target = node.getNext();
         if (target == null) { 
-            throw new NoSuchElementException("no element after given node");
+            throw new IllegalStateException();
         }
         node.setNext(target.getNext());
         size--;
